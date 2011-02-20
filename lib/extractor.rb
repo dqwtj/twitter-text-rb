@@ -158,9 +158,9 @@ module Twitter
       return [] unless text
 
       tags = []
-      text.scan(Twitter::Regex[:auto_link_hashtags]) do |before, hash, hash_text|
+      text.scan(Twitter::Regex[:auto_link_hashtags]) do |before, hash, hash_text, hash|
         start_position = $~.char_begin(2)
-        end_position = $~.char_end(3)
+        end_position = $~.char_end(4)
         tags << {
           :hashtag => hash_text,
           :indices => [start_position, end_position]
