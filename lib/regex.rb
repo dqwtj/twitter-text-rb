@@ -27,7 +27,8 @@ module Twitter
     REGEXEN[:spaces] = Regexp.new(UNICODE_SPACES.collect{ |e| [e].pack 'U*' }.join('|'))
 
     REGEXEN[:at_signs] = /[@＠]/
-    REGEXEN[:extract_mentions] = /(^|[^a-zA-Z0-9_])#{REGEXEN[:at_signs]}([a-zA-Z0-9_]{1,20})(?=(.|$))/o
+    #REGEXEN[:extract_mentions] = /(^|[^a-zA-Z0-9_])#{REGEXEN[:at_signs]}([a-zA-Z0-9_]{1,20})(?=(.|$))/o
+    REGEXEN[:extract_mentions] = /(.*?)#{REGEXEN[:at_signs]}([a-zA-Z0-9_]{1,20})(?=(.|$))/o
     REGEXEN[:extract_reply] = /^(?:#{REGEXEN[:spaces]})*#{REGEXEN[:at_signs]}([a-zA-Z0-9_]{1,20})/o
 
     major, minor, patch = RUBY_VERSION.split('.')
@@ -44,8 +45,8 @@ module Twitter
     LATIN_ACCENTS = [(0xc0..0xd6).to_a, (0xd8..0xf6).to_a, (0xf8..0xff).to_a].flatten.pack('U*').freeze
     REGEXEN[:latin_accents] = /[#{LATIN_ACCENTS}]+/o
 
+    #REGEXEN[:end_screen_name_match] = /^(?:#{REGEXEN[:at_signs]}|#{REGEXEN[:latin_accents]}|:\/\/)/o
     REGEXEN[:end_screen_name_match] = /^(?:#{REGEXEN[:at_signs]}|#{REGEXEN[:latin_accents]}|:\/\/)/o
-
     # Characters considered valid in a hashtag but not at the beginning, where only a-z and 0-9 are valid.
     HASHTAG_CHARACTERS = /[a-z0-9_#{LATIN_ACCENTS}]/io
     REGEXEN[:auto_link_hashtags] = /(^|[^0-9A-Z&\/\?]+)(#|＃)([0-9a-z_]*[a-z_]+#{HASHTAG_CHARACTERS}*)/io
