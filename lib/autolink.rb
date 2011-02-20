@@ -129,10 +129,11 @@ module Twitter
 
       text.gsub(Twitter::Regex[:auto_link_hashtags]) do
         before = $1
-        hash = $2
+        hash_start = $2
         text = $3
+        hash_end = $4
         text = yield(text) if block_given?
-        "#{before}<a href=\"#{options[:hashtag_url_base]}#{html_escape(text)}\" title=\"##{html_escape(text)}\" #{target_tag(options)}class=\"#{options[:url_class]} #{options[:hashtag_class]}\"#{extra_html}>#{html_escape(hash)}#{html_escape(text)}</a>"
+        "#{before}<a href=\"#{options[:hashtag_url_base]}#{html_escape(text)}\" title=\"##{html_escape(text)}\" #{target_tag(options)}class=\"#{options[:url_class]} #{options[:hashtag_class]}\"#{extra_html}>#{html_escape(hash_start)}#{html_escape(text)}#{html_escape(hash_end)}</a>"
       end
     end
 
