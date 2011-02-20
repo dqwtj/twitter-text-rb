@@ -54,12 +54,12 @@ module Twitter
     #   auto-linked items
     # <tt>:target</tt>::   add <tt>target="window_name"</tt> to auto-linked
     #   items
-    def auto_link(text, options = {})
+    def auto_link(text, options = {}, &blk)
       auto_link_usernames(
         auto_link_urls_custom(
           auto_link_hashtags(text, options),
           options),
-        options)
+        options, &blk)
     end
 
     # Add <tt><a></a></tt> tags around the usernames and lists in the provided
@@ -85,7 +85,7 @@ module Twitter
       options[:url_class] ||= DEFAULT_URL_CLASS
       options[:username_class] ||= DEFAULT_USERNAME_CLASS
       options[:username_url_base] ||= "http://twitter.com/"
-      #options[:list_url_base] ||= "http://twitter.com/"
+      # #options[:list_url_base] ||= "http://twitter.com/"
       options[:target] ||= DEFAULT_TARGET
 
       extra_html = HTML_ATTR_NO_FOLLOW unless options[:suppress_no_follow]
@@ -102,15 +102,15 @@ module Twitter
         else
           new_text << chunk.gsub(Twitter::Regex[:auto_link_usernames]) do
             before, at, user, after = $1, $2, $3, $'
-          
-            if after =~ Twitter::Regex[:end_screen_name_match]
-              # Followed by something that means we don't autolink
-              "#{before}#{at}#{user}"
-            else
+            user_exist = block_given? ? yield(user) : true
+            if after !~ Twitter::Regex[:end_screen_name_match] && user_exist
               # this is a screen name
               chunk = user
-              chunk = yield(chunk) if block_given?
-              "#{before}#{at}<a class=\"#{options[:url_class]} #{options[:username_class]}\" #{target_tag(options)}href=\"#{html_escape(options[:username_url_base])}#{html_escape(chunk)}\"#{extra_html}>#{html_escape(chunk)}</a>"
+              "#{before}#{at}<a class=\"#{options[:url_class]} #{options[:username_class]}\" #{target_tag(options)}href=\"#{html_escape(options[:username_url_base])}#{html_escape(chunk)}\"#{extra_html}>#{html_escape(chunk)}</a>" 
+            else
+              # Followed by something that means we don't autolink
+              # block return false
+              "#{before}#{at}#{user}"
             end
           end
           
