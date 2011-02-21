@@ -102,11 +102,14 @@ module Twitter
         else
           new_text << chunk.gsub(Twitter::Regex[:auto_link_usernames]) do
             before, at, user, after = $1, $2, $3, $'
-            user_exist = block_given? ? yield(user) : true
-            if after !~ Twitter::Regex[:end_screen_name_match] && user_exist
+            #如果不加block参数，就假设screen_name是存在的，auto_link之！
+            #如果加block参数，block需返回两个元素的数组，前一个为user对象，后一个为link想要设置的title
+            user_model, title = block_given? ? yield(user) : [true, user]
+
+            if after !~ Twitter::Regex[:end_screen_name_match] && user_model
               # this is a screen name
               chunk = user
-              "#{before}#{at}<a class=\"#{options[:url_class]} #{options[:username_class]}\" #{target_tag(options)}href=\"#{html_escape(options[:username_url_base])}#{html_escape(chunk)}\"#{extra_html}>#{html_escape(chunk)}</a>" 
+              "#{before}#{at}<a title=\"#{html_escape(title)}\" class=\"#{options[:url_class]} #{options[:username_class]}\" #{target_tag(options)}href=\"#{html_escape(options[:username_url_base])}#{html_escape(chunk)}\"#{extra_html}>#{html_escape(chunk)}</a>"
             else
               # Followed by something that means we don't autolink
               # block return false
@@ -171,6 +174,10 @@ module Twitter
     end
 
     private
+
+    def build_title(user)
+
+    end
 
     def target_tag(options)
       target_option = options[:target]
