@@ -175,9 +175,6 @@ module Twitter
 
     private
 
-    def build_title(user)
-
-    end
 
     def target_tag(options)
       target_option = options[:target]
