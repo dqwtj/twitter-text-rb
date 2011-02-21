@@ -4,7 +4,7 @@ module Twitter
   #   and URLs.
   module Autolink extend self
     include ActionView::Helpers::TagHelper #tag_options needed by auto_link
-
+    extend ActionView::Helpers::TagHelper
     # Default CSS class for auto-linked URLs
     DEFAULT_URL_CLASS = "tweet-url"
     # Default CSS class for auto-linked lists (along with the url class)
