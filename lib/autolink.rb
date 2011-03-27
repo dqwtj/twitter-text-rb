@@ -54,11 +54,11 @@ module Twitter
     #   auto-linked items
     # <tt>:target</tt>::   add <tt>target="window_name"</tt> to auto-linked
     #   items
-    def auto_link(text, options = {}, &blk)
+    def auto_link(text, options = {}, href_options = {}, &blk)
       auto_link_usernames(
         auto_link_urls_custom(
           auto_link_hashtags(text, options),
-          options),
+          href_options),
         options, &blk)
     end
 
