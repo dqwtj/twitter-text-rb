@@ -6,6 +6,7 @@ if major.to_i == 1 && minor.to_i < 9
 end
 
 # External libraries required. (for gems, use: ruby -rubygems ...)
+require 'cgi'
 require 'action_pack'
 require 'action_view'
 

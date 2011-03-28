@@ -149,7 +149,7 @@ module Twitter
         text = $3
         hash_end = $4
         text = yield(text) if block_given?
-        "#{before}<a href=\"#{options[:hashtag_url_base]}#{html_escape(text)}\" title=\"#{html_escape(text)}\" #{target_tag(options)}class=\"#{options[:url_class]} #{options[:hashtag_class]}\"#{extra_html}>#{html_escape(hash_start)}#{html_escape(text)}#{html_escape(hash_end)}</a>"
+        "#{before}<a href=\"#{options[:hashtag_url_base]}#{CGI.escape(text)}\" title=\"#{html_escape(text)}\" #{target_tag(options)}class=\"#{options[:url_class]} #{options[:hashtag_class]}\"#{extra_html}>#{html_escape(hash_start)}#{html_escape(text)}#{html_escape(hash_end)}</a>"
       end
     end
 
